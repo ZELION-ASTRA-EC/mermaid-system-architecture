@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>System Architecture Diagrams with Mermaid</title>
+  <!-- Import Mermaid from CDN -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true });
+  </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .mermaid {
+      margin-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Flow Diagram (Graph TB)</h1>
+  <div class="mermaid">
+    graph TB
+        subgraph "Data Sources"
+            DS1[" "] -.-> |"Satellite Data"| DS1
+            DS2[" "] -.-> |"IoT Sensors"| DS2
+            DS3[" "] -.-> |"Climate Data"| DS3
+            DS1 --> PP1
+            DS2 --> PP2
+            DS3 --> PP1
+        end
+
+        subgraph "Preprocessing"
+            PP1[" "] -.-> |"Geospatial<br>Processor"| PP1
+            PP2[" "] -.-> |"IoT Data<br>Processor"| PP2
+        end
+
+        subgraph "Vector Database"
+            VDB1[" "] -.-> |"Remote Sensing<br>Collection"| VDB1
+            VDB2[" "] -.-> |"IoT<br>Collection"| VDB2
+            PP1 --> |"Embeddings"| VDB1
+            PP2 --> |"Embeddings"| VDB2
+        end
+
+        subgraph "Multi-Agent System"
+            A1[" "] -.-> |"Remote Sensing<br>Agent"| A1
+            A2[" "] -.-> |"Gates<br>Agent"| A2
+            A3[" "] -.-> |"Farms<br>Agent"| A3
+            A4[" "] -.-> |"Orchestrator<br>Agent"| A4
+            
+            VDB1 --> |"Vector<br>Queries"| A1
+            VDB2 --> |"Vector<br>Queries"| A2
+            VDB2 --> |"Vector<br>Queries"| A3
+            
+            A1 --> |"Analysis"| A4
+            A2 --> |"Analysis"| A4
+            A3 --> |"Analysis"| A4
+        end
+
+        subgraph "Analysis & Recommendations"
+            R1[" "] -.-> |"Plant Health<br>Analysis"| R1
+            R2[" "] -.-> |"Irrigation<br>Optimization"| R2
+            R3[" "] -.-> |"Resource<br>Management"| R3
+            R4[" "] -.-> |"Integrated<br>Report"| R4
+            
+            A4 --> |"Recommendations"| R1
+            A4 --> |"Recommendations"| R2
+            A4 --> |"Recommendations"| R3
+            
+            R1 --> R4
+            R2 --> R4
+            R3 --> R4
+        end
+
+        %% Style
+        classDef sourceNode fill:#f9f,stroke:#333,stroke-width:2px;
+        classDef processNode fill:#bbf,stroke:#333,stroke-width:2px;
+        classDef dbNode fill:#bfb,stroke:#333,stroke-width:2px;
+        classDef agentNode fill:#ffb,stroke:#333,stroke-width:2px;
+        classDef outputNode fill:#fbb,stroke:#333,stroke-width:2px;
+        classDef emptyNode fill:none,stroke:none;
+
+        class DS1,DS2,DS3 sourceNode;
+        class PP1,PP2 processNode;
+        class VDB1,VDB2 dbNode;
+        class A1,A2,A3,A4 agentNode;
+        class R1,R2,R3,R4 outputNode;
+  </div>
+
+  <h1>Sequence Diagram</h1>
+  <div class="mermaid">
+    sequenceDiagram
+        participant DS as Data Sources
+        participant PP as Preprocessing
+        participant VDB as Vector DB
+        participant RSA as Remote Sensing Agent
+        participant GA as Gates Agent
+        participant FA as Farms Agent
+        participant OA as Orchestrator Agent
+        participant Out as Output
+
+        DS->>PP: Raw data
+        PP->>PP: Cleaning & normalization
+        PP->>PP: Embeddings generation
+        PP->>VDB: Store vectors
+
+        par Parallel Queries
+            VDB->>RSA: Remote sensing data
+            VDB->>GA: Gates data
+            VDB->>FA: Farms data
+        end
+
+        RSA->>OA: Satellite analysis
+        GA->>OA: Gates analysis
+        FA->>OA: Farms analysis
+
+        OA->>OA: Integrate analyses
+        OA->>Out: Generate recommendations
+        Out->>Out: Format final report
+  </div>
+</body>
+</html>
